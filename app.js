@@ -7,4 +7,16 @@ app.use(express.json());
 
 // app.use("/todo", hostRoute);
 // app.use("/user", userRoute);
+
+app.all("*", (req, res, next) => {
+  next(
+    errorHandeler.createError(
+      `Can't find ${req.originalUrl} in the server`,
+      404
+    )
+  );
+});
+
+app.use(errControler);
+
 module.exports = app;
