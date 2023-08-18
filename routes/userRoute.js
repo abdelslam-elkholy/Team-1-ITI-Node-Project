@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const authCountroller = require("./../controlleres/authController");
 
-// router.route("/").get().post();
-// router.route("/:id").get().patch().delete();
+router.route("/signup").post(authCountroller.signUp);
 
 module.exports = router;

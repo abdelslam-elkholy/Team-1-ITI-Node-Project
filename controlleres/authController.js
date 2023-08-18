@@ -1,5 +1,4 @@
 const User = require("./../models/userModel");
-const AppError = require("./../utils/appError");
 const jwt = require("jsonwebtoken");
 
 const createToken = (id) => {
@@ -27,6 +26,7 @@ exports.signUp = async (req, res, next) => {
       },
     });
   } catch (err) {
+    console.log(err);
     res.status(400).json({
       message: "autherization Failed",
       err: {

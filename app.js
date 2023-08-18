@@ -1,22 +1,19 @@
 const express = require("express");
-const app = express();
+const AppError = require("./utils/appError");
+const errControler = require("./controlleres/authController");
 const hostRoute = require("./routes/hostRoute");
 const userRoute = require("./routes/userRoute");
 
+const app = express();
 app.use(express.json());
 
 // app.use("/todo", hostRoute);
-// app.use("/user", userRoute);
+app.use("/user", userRoute);
 
-app.all("*", (req, res, next) => {
-  next(
-    errorHandeler.createError(
-      `Can't find ${req.originalUrl} in the server`,
-      404
-    )
-  );
-});
+// app.all("*", (req, res, next) => {
+//   next(new AppError(`Can't find ${req.originalUrl} in the server`, 404));
+// });
 
-app.use(errControler);
+// app.use(errControler);
 
 module.exports = app;
