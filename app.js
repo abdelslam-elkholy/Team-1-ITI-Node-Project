@@ -1,19 +1,21 @@
 const express = require("express");
-const AppError = require("./utils/appError");
-const errControler = require("./controlleres/authController");
+const { errorHandler, AppError } = require("./controlleres/errorController");
 const hostRoute = require("./routes/hostRoute");
 const userRoute = require("./routes/userRoute");
 
 const app = express();
 app.use(express.json());
 
-// app.use("/todo", hostRoute);
+app.use("/host", hostRoute);
 app.use("/user", userRoute);
 
-// app.all("*", (req, res, next) => {
-//   next(new AppError(`Can't find ${req.originalUrl} in the server`, 404));
-// });
+p.use("/api/user", userRoute);
 
-// app.use(errControler);
+app.all("*", (req, res, next) => {
+  const err = new AppError(`there is nou route for this ${req.originalUrl}`);
+  next(err);
+});
+
+app.use(errorHandler);
 
 module.exports = app;
