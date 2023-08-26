@@ -9,8 +9,6 @@ app.use(express.json());
 app.use("/host", hostRoute);
 app.use("/user", userRoute);
 
-p.use("/api/user", userRoute);
-
 app.all("*", (req, res, next) => {
   const err = new AppError(`there is nou route for this ${req.originalUrl}`);
   next(err);
