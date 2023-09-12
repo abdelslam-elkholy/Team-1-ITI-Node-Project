@@ -1,5 +1,5 @@
 const express = require("express");
-const { errorHandler, AppError } = require("./controlleres/errorController");
+const { errorHandler, AppError } = require("./utils/appError");
 const houseRoute = require("./routes/houseRoute");
 const userRoute = require("./routes/userRoute");
 const reservationRoute = require("./routes/reservationRoute");

@@ -1,4 +1,4 @@
-const Rivew = require("../models/rivewModel");
+const Rivew = require("../models/reviewModel");
 const { AppError } = require("../utils/appError");
 
 exports.getAllRivews = async (req, res, next) => {

@@ -4,7 +4,7 @@ const houseController = require("./../controlleres/houseController");
 
 router
   .route("/house")
-  .get(houseController.getHouses)
+  .get(houseController.getAllHouses)
   .post(houseController.createHouse);
 router
   .route("/house/:id")

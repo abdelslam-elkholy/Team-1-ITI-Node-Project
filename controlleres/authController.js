@@ -1,6 +1,6 @@
 const User = require("./../models/userModel");
 const jwt = require("jsonwebtoken");
-const { AppError } = require("./../controllers/errorHandler");
+const { AppError } = require("./../utils/appError");
 
 const createToken = (id) => {
   const token = jwt.sign({ id }, process.env.JWT_STRING, {
