@@ -15,3 +15,5 @@ router
 
 router.route("/user/:id").get(reservationController.getUserReservations);
 router.route("/house/:id").get(reservationController.getHouseReservations);
+
+module.exports = router;
