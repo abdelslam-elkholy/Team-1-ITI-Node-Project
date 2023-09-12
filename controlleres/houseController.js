@@ -1,5 +1,5 @@
 const House = require("../models/houseModel");
-const AppError = require("../utils/appError");
+const { AppError } = require("../utils/appError");
 
 exports.getAllHouses = async (req, res, next) => {
   try {

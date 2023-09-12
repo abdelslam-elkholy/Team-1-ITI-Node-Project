@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-var hostSchema = new mongoose.Schema({
+const houseSchema = new mongoose.Schema({
   name: {
     type: String,
     minLength: [5, "title is less than 3 characters"],
@@ -55,5 +55,6 @@ var hostSchema = new mongoose.Schema({
   },
 });
 
-var hostModel = mongoose.model("host", hostSchema);
-module.exports = hostModel;
+const House = mongoose.model("house", houseSchema);
+
+module.exports = House;
