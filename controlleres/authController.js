@@ -1,6 +1,6 @@
 const User = require("./../models/userModel");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const { AppError } = require("./../controllers/errorHandler");
 
 const createToken = (id) => {
   const token = jwt.sign({ id }, process.env.JWT_STRING, {
@@ -27,36 +27,30 @@ exports.signUp = async (req, res, next) => {
       },
     });
   } catch (err) {
-    console.log(err);
-    res.status(400).json({
-      message: "autherization Failed",
-      err: {
-        err,
-      },
-    });
+    next(new AppError(err.message, 400));
   }
 };
 
-exports.signIn = async function (req, res) {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res
-      .status(404)
-      .json({ message: "please provide username and password" });
-  }
+exports.signIn = async function (req, res, next) {
   try {
-    const user = await User.findOne({ email: email });
-    if (!user) {
-      return res.status(401).json({ message: "invalid username or password" });
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return next(new AppError("You must Provide Email and password", 400));
     }
-    const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) {
-      return res.status(401).json({ message: "invalid username  or password" });
+
+    const user = await User.findOne({ email }).select("+password");
+
+    if (!user || !(await user.validatePassword(password))) {
+      return next(new AppError("Invalid Email Or Password", 401));
     }
-    //                      paylod                     secret key
+
     const token = createToken(user._id);
-    res.status(200).json({ token, status: "success" });
-  } catch (err) {
-    res.status(400).json({ message: err.message, kmlkm: "jnjok" });
+    res.status(200).json({
+      message: "success",
+      token,
+    });
+  } catch (error) {
+    return next(new AppError(error.message, 400));
   }
 };

@@ -8,7 +8,7 @@ var {
   getHostBYID,
   UpdateHostIfo,
   deleteHost,
-} = require("../controlleres/hostController");
+} = require("../controlleres/houseController");
 // router.route("/").get().post();
 // router.route("/:id").get().patch().delete();
 
