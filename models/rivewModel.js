@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const rivewsSchema = new mongoose.Schema({
-  HostID: {
+  houseId: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "house",
   },
-  UserID: {
+  userId: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "user",
   },
@@ -15,8 +15,8 @@ const rivewsSchema = new mongoose.Schema({
     default: 1,
     require: true,
   },
-  Rivew: {
-    type: Number,
+  rivew: {
+    type: String,
     require: true,
   },
 });

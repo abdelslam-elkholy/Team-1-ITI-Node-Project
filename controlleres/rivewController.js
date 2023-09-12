@@ -55,7 +55,7 @@ exports.getRivew = async (req, res, next) => {
 
 exports.updateRivew = async (req, res, next) => {
   try {
-    const review = await Rivew.findByIdAndDelete(req.params.id, req.body, {
+    const review = await Rivew.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
 
@@ -98,7 +98,7 @@ exports.deleteRivew = async (req, res, next) => {
 
 exports.getRivewsByHouseId = async (req, res, next) => {
   try {
-    const rivews = await Rivew.find({ house: req.params.houseId });
+    const rivews = await Rivew.find({ houseId: req.params.houseId });
 
     if (!rivews) {
       return next(
@@ -122,12 +122,39 @@ exports.getRivewsByHouseId = async (req, res, next) => {
 
 exports.getRivewsByUserId = async (req, res, next) => {
   try {
-    const rivews = await Rivew.find({ user: req.params.userId });
+    const rivews = await Rivew.find({ userId: req.params.userId });
 
     if (!rivews) {
       return next(
         new AppError(
           `There is no rivews with the user id ${req.params.userId}`,
+          404
+        )
+      );
+    }
+
+    res.status(200).json({
+      status: "Success",
+      data: {
+        rivews,
+      },
+    });
+  } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
+};
+
+exports.getRivewsByHouseIdAndUserId = async (req, res, next) => {
+  try {
+    const rivews = await Rivew.find({
+      houseId: req.params.houseId,
+      userId: req.params.userId,
+    });
+
+    if (!rivews) {
+      return next(
+        new AppError(
+          `There is no rivews with the user id ${req.params.userId} and house id ${req.params.houseId}`,
           404
         )
       );

@@ -5,7 +5,7 @@ const wishlistSchema = new mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: "user",
   },
-  hostId: {
+  houseId: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "house",
   },

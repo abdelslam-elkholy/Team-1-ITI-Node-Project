@@ -1,33 +1,95 @@
-const fs = require("fs");
-const wishlistModel = require("../models/wishlist");
+const Wishlist = require("../models/wishlistModel");
+const { AppError } = require("../utils/appError");
 
-// post
-function saveWishlist(wishlist) {
-  return wishlistModel.create(wishlist);
-}
-//   get all
-function getAllWishlist() {
-  return wishlistModel.find().populate("hostId", "userId");
-}
-//   get by id
-function getWishlistById(id) {
-  return wishlistModel.findOne({ _id: id }).populate("hostId", "userId");
-}
-//   edit by id
-function updateWishlistById(id) {
-  return wishlistModel.findByIdAndUpdate(id).populate("hostId", "userId");
-}
+exports.getAllWishlists = async (req, res, next) => {
+  try {
+    const wishlists = await Wishlist.find();
 
-function deleteWishlistById(id) {
-  return wishlistModel
-    .findByIdAndDelete({ _id: id })
-    .populate("hostId", "userId");
-}
-//================================================
-module.exports = {
-  saveWishlist,
-  getAllWishlist,
-  getWishlistById,
-  updateWishlistById,
-  deleteWishlistById,
+    res.status(200).json({
+      status: "success",
+      wishlistCount: wishlists.length,
+      data: {
+        wishlists,
+      },
+    });
+  } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
+};
+exports.createWishlist = async (req, res, next) => {
+  try {
+    const newWishlist = await Wishlist.create(req.body);
+
+    res.status(201).json({
+      status: "success",
+      data: {
+        wishlist: newWishlist,
+      },
+    });
+  } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
+};
+
+exports.getWishlist = async (req, res, next) => {
+  try {
+    const wishlist = await Wishlist.findById(req.params.id);
+
+    if (!wishlist) {
+      return next(
+        new AppError(`There is no wishlist with the id ${req.params.id}`, 404)
+      );
+    }
+
+    res.status(200).json({
+      status: "Success",
+      data: {
+        wishlist,
+      },
+    });
+  } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
+};
+
+exports.deleteWishlist = async (req, res, next) => {
+  try {
+    const wishlist = await Wishlist.findByIdAndDelete(req.params.id);
+
+    if (!wishlist) {
+      return next(
+        new AppError(`There is no wishlist with the id ${req.params.id}`, 404)
+      );
+    }
+
+    res.status(200).json({
+      status: "Success",
+      data: {
+        wishlist,
+      },
+    });
+  } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
+};
+
+exports.getWishlistsByUserId = async (req, res, next) => {
+  try {
+    const wishlist = await Wishlist.find({ userId: req.params.id });
+
+    if (!wishlist) {
+      return next(
+        new AppError(`There is no wishlist with the id ${req.params.id}`, 404)
+      );
+    }
+
+    res.status(200).json({
+      status: "Success",
+      data: {
+        wishlist,
+      },
+    });
+  } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
 };
