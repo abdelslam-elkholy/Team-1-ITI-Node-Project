@@ -108,3 +108,35 @@ exports.deleteReservation = async (req, res, next) => {
     return next(new AppError(error.message, 500));
   }
 };
+
+exports.getReservationsByUserId = async (req, res, next) => {
+  try {
+    const reservations = await Reservation.find({ userId: req.params.userId });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        reservations,
+      },
+    });
+  } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
+};
+
+exports.getReservationsByHouseId = async (req, res, next) => {
+  try {
+    const reservations = await Reservation.find({
+      houseId: req.params.houseId,
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        reservations,
+      },
+    });
+  } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
+};
