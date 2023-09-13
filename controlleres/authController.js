@@ -1,4 +1,5 @@
 const User = require("./../models/userModel");
+const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
 const { AppError } = require("./../utils/appError");
 
@@ -53,4 +54,45 @@ exports.signIn = async function (req, res, next) {
   } catch (error) {
     return next(new AppError(error.message, 400));
   }
+};
+
+exports.protect = async (req, res, next) => {
+  try {
+    let token;
+
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+
+    if (!token) return next(new AppError("you are not logged in", 401));
+
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_STRING);
+    const existUser = await User.findById(decoded.id);
+
+    if (!existUser) {
+      return next(new AppError("the user isnt exist anymore", 401));
+    }
+
+    if (existUser.checkChangedPasswordTime(decoded.iat)) {
+      return next(new AppError("session ended pleas login again ", 401));
+    }
+
+    req.user = existUser;
+
+    next();
+  } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
+};
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role))
+      return next(new AppError("You dont have permission", 403));
+
+    next();
+  };
 };
