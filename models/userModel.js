@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const { use } = require("../app");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -43,6 +44,13 @@ const userSchema = new mongoose.Schema({
     enum: ["admin", "user"],
   },
   passwordChangedAt: Date,
+  passwordResetToken: String,
+  passwordResetTokenExpiresAt: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false,
+  },
 });
 
 userSchema.pre("save", async function (next) {
@@ -51,6 +59,11 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 12);
   this.confirmPassword = undefined;
 
+  next();
+});
+
+userSchema.pre(/^find/, function (next) {
+  this.find({ active: { $ne: false } });
   next();
 });
 
