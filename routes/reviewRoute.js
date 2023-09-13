@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const reviewController = require("../controlleres/reviewController");
-const authMiddleware = require("../middlewares/authMiddleware");
+const authController = require("./../controlleres/authController");
 
 router
   .route("/")
   .get(reviewController.getAllRivews)
-  .post(reviewController.createRivew);
+  .post(authController.protect, reviewController.createRivew);
 router
   .route("/:id")
   .get(reviewController.getRivew)

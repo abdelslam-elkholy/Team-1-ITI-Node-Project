@@ -1,12 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const reservationController = require("./../controlleres/reservationController");
-const authMiddleware = require("./../middlewares/authMiddleware");
+const authController = require("./../controlleres/authController");
 
 router
   .route("/")
-  .get(reservationController.getAllReservations)
-  .post(reservationController.createReservation);
+  .get(
+    authController.restrictTo("admin"),
+    reservationController.getAllReservations
+  )
+  .post(authController.protect, reservationController.createReservation);
 router
   .route("/:id")
   .get(reservationController.getReservation)

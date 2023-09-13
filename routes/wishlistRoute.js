@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const wishlistController = require("../controlleres/wishlistController");
-
+const authController = require("./../controlleres/authController");
 router
   .route("/")
   .get(wishlistController.getAllWishlists)
-  .post(wishlistController.createWishlist);
+  .post(authController.protect, wishlistController.createWishlist);
 router
   .route("/:id")
   .get(wishlistController.getWishlist)
