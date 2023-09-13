@@ -10,6 +10,27 @@ const createToken = (id) => {
   return token;
 };
 
+const sendToken = (user, statusCode, res) => {
+  const token = createToken(user._id);
+
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  };
+
+  res.coockie("jwt", token, cookieOptions);
+
+  res.status(statusCode).json({
+    status: "success",
+    token,
+    data: {
+      user,
+    },
+  });
+};
+
 exports.signUp = async (req, res, next) => {
   try {
     const user = await User.create({
@@ -19,14 +40,7 @@ exports.signUp = async (req, res, next) => {
       confirmPassword: req.body.confirmPassword,
     });
 
-    const token = createToken(user._id);
-    res.status(201).json({
-      message: "Done",
-      token,
-      data: {
-        user,
-      },
-    });
+    sendToken(user, 201, res);
   } catch (err) {
     next(new AppError(err.message, 400));
   }
@@ -46,11 +60,7 @@ exports.signIn = async function (req, res, next) {
       return next(new AppError("Invalid Email Or Password", 401));
     }
 
-    const token = createToken(user._id);
-    res.status(200).json({
-      message: "success",
-      token,
-    });
+    sendToken(user, 200, res);
   } catch (error) {
     return next(new AppError(error.message, 400));
   }
