@@ -40,12 +40,8 @@ const houseSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-  comment: {
-    type: String,
-  },
-  images: {
-    type: String,
-  },
+  comments: [String],
+  images: [String],
   category: {
     type: String,
   },

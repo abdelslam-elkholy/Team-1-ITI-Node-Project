@@ -1,5 +1,28 @@
 const House = require("../models/houseModel");
 const { AppError } = require("../utils/appError");
+const multer = require("multer");
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/img/houses");
+  },
+  filename: (req, file, cb) => {
+    const ext = file.mimetype.split("/")[1];
+    cb(null, `house-${Date.now()}.${ext}`);
+  },
+});
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("image")) cb(null, true);
+  else cb(new AppError("Not an image! Please upload only images.", 400), false);
+};
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.uploadHouseImages = upload.array("images", 10);
 
 exports.getAllHouses = async (req, res, next) => {
   try {
@@ -19,6 +42,8 @@ exports.getAllHouses = async (req, res, next) => {
 
 exports.createHouse = async (req, res, next) => {
   try {
+    const images = req.files.map((file) => file.filename);
+    req.body.images = images;
     const newHouse = await House.create(req.body);
 
     res.status(201).json({

@@ -3,11 +3,11 @@ const router = express.Router();
 const houseController = require("./../controlleres/houseController");
 
 router
-  .route("/house")
+  .route("/")
   .get(houseController.getAllHouses)
-  .post(houseController.createHouse);
+  .post(houseController.uploadHouseImages, houseController.createHouse);
 router
-  .route("/house/:id")
+  .route("/:id")
   .get(houseController.getHouse)
   .patch(houseController.updateHouse)
   .delete(houseController.deleteHouse);
