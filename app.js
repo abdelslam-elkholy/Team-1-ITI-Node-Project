@@ -19,6 +19,7 @@ const limiter = rateLimit({
   message: "Too many requests from this IP, please try again in an hour!",
 });
 
+app.use(express.static("public"));
 app.use(helmet());
 app.use(express.json());
 app.use("/", limiter);
