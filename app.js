@@ -11,6 +11,7 @@ const userRoute = require("./routes/userRoute");
 const reservationRoute = require("./routes/reservationRoute");
 const reviewRoute = require("./routes/reviewRoute");
 const wishlistRoute = require("./routes/wishlistRoute");
+const categoryRoute = require("./routes/categoryRoute");
 
 const app = express();
 const limiter = rateLimit({
@@ -32,6 +33,7 @@ app.use("/user", userRoute);
 app.use("/reservation", reservationRoute);
 app.use("/review", reviewRoute);
 app.use("/wishlist", wishlistRoute);
+app.use("/category", categoryRoute);
 
 app.all("*", (req, res, next) => {
   const err = new AppError(`there is nou route for this ${req.originalUrl}`);

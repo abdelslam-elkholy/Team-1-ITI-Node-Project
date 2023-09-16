@@ -4,13 +4,13 @@ const categoryCountroller = require("./../controlleres/categoryController");
 const authController = require("./../controlleres/authController");
 
 router
-  .route("/category")
+  .route("/")
   .get(categoryCountroller.getCategories)
-  .post(authController.protect, categoryCountroller.createCategory);
+  .post(categoryCountroller.createCategory);
 router
-  .route("/category/:id")
+  .route("/:id")
   .get(categoryCountroller.getCategory)
-  .patch(authController.protect, categoryCountroller.updateCategory)
-  .delete(authController.protect, categoryCountroller.deleteCategory);
+  .patch(categoryCountroller.updateCategory)
+  .delete(categoryCountroller.deleteCategory);
 
 module.exports = router;

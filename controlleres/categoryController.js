@@ -1,6 +1,6 @@
 const Category = require("../models/categoryModel");
 const catchAsync = require("../utils/catchAsync");
-const { AppError } = require("./errorHandler");
+const { AppError } = require("../utils/appError");
 
 exports.createCategory = async (req, res, next) => {
   try {
@@ -26,7 +26,7 @@ exports.getCategories = async (req, res, next) => {
     res.status(200).json({
       message: "success",
       data: {
-        data: categories,
+        categories,
       },
     });
   } catch (error) {
