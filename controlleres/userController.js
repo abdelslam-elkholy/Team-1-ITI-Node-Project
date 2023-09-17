@@ -53,3 +53,33 @@ exports.deleteMe = async (req, res, next) => {
     return next(new appError(error.message, 500));
   }
 };
+
+exports.getOneUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        user,
+      },
+    });
+  } catch (error) {
+    return next(new appError(error.message, 500));
+  }
+};
+
+exports.getMe = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        user,
+      },
+    });
+  } catch (error) {
+    return next(new appError(error.message, 500));
+  }
+};
