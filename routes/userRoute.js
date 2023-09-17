@@ -11,9 +11,7 @@ router.route("/signin").post(authCountroller.signIn);
 // router.route("/updatePassword").patch(authCountroller.updatePassword);
 // router.route("/forgotPassword").post(authCountroller.forgotPassword);
 
-router
-  .route("/")
-  .get(authCountroller.restrictTo("admin"), userController.getAllUsers);
+router.route("/").get(userController.getAllUsers);
 router
   .route("/updateMe")
   .patch(authCountroller.protect, userController.updateMe);
