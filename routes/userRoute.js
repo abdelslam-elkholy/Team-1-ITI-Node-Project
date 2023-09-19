@@ -13,6 +13,7 @@ router.route("/hosts").get(userController.getHosts);
 router.route("/:id").delete(userController.deleteUser);
 router.route("/activate/:id").get(userController.activateUser);
 router.route("/deactivate/:id").delete(userController.deactivateUser);
+router.route("/makeHost/:id").get(userController.makeHost);
 
 router
   .route("/updateMe")
