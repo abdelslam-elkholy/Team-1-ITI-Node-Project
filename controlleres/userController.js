@@ -83,3 +83,42 @@ exports.getMe = async (req, res, next) => {
     return next(new appError(error.message, 500));
   }
 };
+
+exports.deactivateUser = async (req, res, next) => {
+  try {
+    await User.findByIdAndUpdate(req.params.id, { active: false });
+
+    res.status(204).json({
+      status: "success",
+      data: null,
+    });
+  } catch (error) {
+    return next(new appError(error.message, 500));
+  }
+};
+
+exports.activateUser = async (req, res, next) => {
+  try {
+    await User.findByIdAndUpdate(req.params.id, { active: true });
+
+    res.status(204).json({
+      status: "success",
+      data: null,
+    });
+  } catch (error) {
+    return next(new appError(error.message, 500));
+  }
+};
+
+exports.deleteUser = async (req, res, next) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+
+    res.status(204).json({
+      status: "success",
+      data: null,
+    });
+  } catch (error) {
+    return next(new appError(error.message, 500));
+  }
+};

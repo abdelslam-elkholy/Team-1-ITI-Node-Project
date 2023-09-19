@@ -19,4 +19,15 @@ router
   .route("/deleteMe")
   .delete(authCountroller.protect, userController.deleteMe);
 
+router
+  .route("/:id")
+  .get(userController.getOneUser)
+  .delete(userController.deleteUser);
+
+router
+  .route("/activate/:id")
+  .patch(userController.activateUser)
+  .delete(userController.deactivateUser);
+
+router;
 module.exports = router;

@@ -36,7 +36,7 @@ app.use("/wishlist", wishlistRoute);
 app.use("/category", categoryRoute);
 
 app.all("*", (req, res, next) => {
-  const err = new AppError(`there is nou route for this ${req.originalUrl}`);
+  const err = new AppError(`There is no route for this ${req.originalUrl}`);
   next(err);
 });
 
