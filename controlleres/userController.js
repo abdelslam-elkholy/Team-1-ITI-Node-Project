@@ -99,8 +99,9 @@ exports.deactivateUser = async (req, res, next) => {
 
 exports.activateUser = async (req, res, next) => {
   try {
+    User.disablePreHook = true;
     await User.findByIdAndUpdate(req.params.id, { active: true });
-
+    User.disablePreHook = undefined;
     res.status(204).json({
       status: "success",
       data: null,

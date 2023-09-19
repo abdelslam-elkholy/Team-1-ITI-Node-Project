@@ -1,4 +1,5 @@
 const Reservation = require("../models/reservationModel");
+const House = require("../models/houseModel");
 const { AppError } = require("../utils/appError");
 
 exports.getAllReservations = async (req, res, next) => {
@@ -18,7 +19,54 @@ exports.getAllReservations = async (req, res, next) => {
 };
 exports.createReservation = async (req, res, next) => {
   try {
-    const newReservation = await Reservation.create(req.body);
+    const house = await House.findById(req.body.houseId);
+    const price = house.price;
+
+    const isValideDate =
+      new Date(req.body.checkIn) < new Date(req.body.checkOut) &&
+      new Date(req.body.checkIn) > new Date();
+
+    if (!isValideDate) {
+      return next(
+        new AppError(
+          `The checkin date must be before the checkout date and after today`,
+          400
+        )
+      );
+    }
+
+    const checkAvailability = await Reservation.find({
+      houseId: req.body.houseId,
+      $or: [
+        {
+          checkinDate: {
+            $gte: req.body.checkIn,
+            $lte: req.body.checkOut,
+          },
+        },
+        {
+          checkoutDate: {
+            $gte: req.body.checkIn,
+            $lte: req.body.checkOut,
+          },
+        },
+      ],
+    });
+
+    if (checkAvailability.length > 0) {
+      return next(
+        new AppError(
+          `The house is not available between ${req.body.checkIn} and ${req.body.checkOut}`,
+          400
+        )
+      );
+    }
+
+    const newReservation = await Reservation.create({
+      ...req.body,
+      userId: req.user._id,
+      price,
+    });
 
     res.status(201).json({
       status: "success",
