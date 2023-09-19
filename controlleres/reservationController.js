@@ -17,9 +17,9 @@ exports.getAllReservations = async (req, res, next) => {
     return next(new AppError(error.message, 500));
   }
 };
-
 exports.createReservation = async (req, res, next) => {
   try {
+
     const house = await House.findById(req.body.houseId);
 
     const price =
@@ -44,13 +44,13 @@ exports.createReservation = async (req, res, next) => {
       houseId: req.body.houseId,
       $or: [
         {
-          checkinDate: {
+          checkIn: {
             $gte: req.body.checkIn,
             $lte: req.body.checkOut,
           },
         },
         {
-          checkoutDate: {
+          checkOut: {
             $gte: req.body.checkIn,
             $lte: req.body.checkOut,
           },

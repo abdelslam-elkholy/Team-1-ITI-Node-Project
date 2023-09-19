@@ -12,11 +12,11 @@ const reservationSchema = new mongoose.Schema(
       ref: "user",
       require: true,
     },
-    checkinDate: {
+    checkIn: {
       type: Date,
       require: true,
     },
-    checkoutDate: {
+    checkOut: {
       type: Date,
       require: true,
     },
