@@ -141,3 +141,18 @@ exports.getDeactivatedUsers = async (req, res, next) => {
     return next(new AppError(error.message, 500));
   }
 };
+
+exports.getHosts = async (req, res, next) => {
+  try {
+    const hosts = await User.find({ role: "host" });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        hosts,
+      },
+    });
+  } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
+};

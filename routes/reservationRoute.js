@@ -13,7 +13,6 @@ router
 router
   .route("/:id")
   .get(reservationController.getReservation)
-  .patch(reservationController.updateReservation)
   .delete(reservationController.deleteReservation);
 
 router.route("/user/:id").get(reservationController.getReservationsByUserId);
