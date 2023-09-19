@@ -156,3 +156,24 @@ exports.getHosts = async (req, res, next) => {
     return next(new AppError(error.message, 500));
   }
 };
+
+exports.makeHost = async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { role: "host" },
+      {
+        new: true,
+      }
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        user,
+      },
+    });
+  } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
+};
