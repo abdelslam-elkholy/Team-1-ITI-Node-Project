@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
-const { use } = require("../app");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -64,7 +63,9 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.pre(/^find/, function (next) {
-  this.find({ active: { $ne: false } });
+  if (!User.disablePreHook) {
+    this.find({ active: { $ne: false } });
+  }
   next();
 });
 

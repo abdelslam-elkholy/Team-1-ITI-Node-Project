@@ -1,5 +1,5 @@
 const User = require("../models/userModel");
-const { appError } = require("../utils/appError");
+const { AppError } = require("../utils/appError");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -22,7 +22,7 @@ exports.getAllUsers = async (req, res, next) => {
       },
     });
   } catch (error) {
-    return next(new appError(error.message, 500));
+    return next(new AppError(error.message, 500));
   }
 };
 
@@ -37,7 +37,7 @@ exports.updateMe = async (req, res, next) => {
       }
     );
   } catch (error) {
-    return next(new appError(error.message, 500));
+    return next(new AppError(error.message, 500));
   }
 };
 
@@ -50,24 +50,24 @@ exports.deleteMe = async (req, res, next) => {
       data: null,
     });
   } catch (error) {
-    return next(new appError(error.message, 500));
+    return next(new AppError(error.message, 500));
   }
 };
 
-exports.getOneUser = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.params.id);
+// exports.getOneUser = async (req, res, next) => {
+//   try {
+//     const user = await User.findById(req.params.id);
 
-    res.status(200).json({
-      status: "success",
-      data: {
-        user,
-      },
-    });
-  } catch (error) {
-    return next(new appError(error.message, 500));
-  }
-};
+//     res.status(200).json({
+//       status: "success",
+//       data: {
+//         user,
+//       },
+//     });
+//   } catch (error) {
+//     return next(new AppError(error.message, 500));
+//   }
+// };
 
 exports.getMe = async (req, res, next) => {
   try {
@@ -80,7 +80,7 @@ exports.getMe = async (req, res, next) => {
       },
     });
   } catch (error) {
-    return next(new appError(error.message, 500));
+    return next(new AppError(error.message, 500));
   }
 };
 
@@ -93,7 +93,7 @@ exports.deactivateUser = async (req, res, next) => {
       data: null,
     });
   } catch (error) {
-    return next(new appError(error.message, 500));
+    return next(new AppError(error.message, 500));
   }
 };
 
@@ -106,7 +106,7 @@ exports.activateUser = async (req, res, next) => {
       data: null,
     });
   } catch (error) {
-    return next(new appError(error.message, 500));
+    return next(new AppError(error.message, 500));
   }
 };
 
@@ -119,6 +119,24 @@ exports.deleteUser = async (req, res, next) => {
       data: null,
     });
   } catch (error) {
-    return next(new appError(error.message, 500));
+    return next(new AppError(error.message, 500));
+  }
+};
+
+exports.getDeactivatedUsers = async (req, res, next) => {
+  try {
+    User.disablePreHook = true;
+    const users = await User.find({ active: false });
+    User.disablePreHook = undefined;
+
+    res.status(200).json({
+      status: "success",
+      userCount: users.length,
+      data: {
+        users,
+      },
+    });
+  } catch (error) {
+    return next(new AppError(error.message, 500));
   }
 };
