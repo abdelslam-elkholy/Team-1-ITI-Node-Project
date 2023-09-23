@@ -19,7 +19,7 @@ exports.getAllRivews = async (req, res, next) => {
 
 exports.createRivew = async (req, res, next) => {
   try {
-    const newRivew = await Rivew.create(req.body);
+    const newRivew = await Rivew.create({ ...req.body, userId: req.user._id });
 
     res.status(201).json({
       status: "success",
