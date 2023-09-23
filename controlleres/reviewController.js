@@ -19,7 +19,7 @@ exports.getAllRivews = async (req, res, next) => {
 
 exports.createRivew = async (req, res, next) => {
   try {
-    checkRivew = await Rivew.findOne({
+    const checkRivew = await Rivew.findOne({
       houseId: req.body.houseId,
       userId: req.user._id,
     });

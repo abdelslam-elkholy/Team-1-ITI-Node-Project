@@ -19,7 +19,6 @@ exports.getAllReservations = async (req, res, next) => {
 };
 exports.createReservation = async (req, res, next) => {
   try {
-
     const house = await House.findById(req.body.houseId);
 
     const price =
