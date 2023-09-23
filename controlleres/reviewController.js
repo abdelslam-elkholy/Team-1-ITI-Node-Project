@@ -19,6 +19,20 @@ exports.getAllRivews = async (req, res, next) => {
 
 exports.createRivew = async (req, res, next) => {
   try {
+    checkRivew = await Rivew.findOne({
+      houseId: req.body.houseId,
+      userId: req.user._id,
+    });
+
+    if (checkRivew) {
+      return next(
+        new AppError(
+          `You already have a rivew on this house with the id ${req.body.houseId}`,
+          400
+        )
+      );
+    }
+
     const newRivew = await Rivew.create({ ...req.body, userId: req.user._id });
 
     res.status(201).json({
