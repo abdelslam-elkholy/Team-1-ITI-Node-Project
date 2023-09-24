@@ -28,12 +28,12 @@ app.use(cors());
 app.use(mongoSanitize());
 app.use(xss());
 
-app.use("/house", houseRoute);
-app.use("/user", userRoute);
-app.use("/reservation", reservationRoute);
-app.use("/review", reviewRoute);
-app.use("/wishlist", wishlistRoute);
-app.use("/category", categoryRoute);
+app.use("/houses", houseRoute);
+app.use("/users", userRoute);
+app.use("/reservations", reservationRoute);
+app.use("/reviews", reviewRoute);
+app.use("/wishlists", wishlistRoute);
+app.use("/categories", categoryRoute);
 
 app.all("*", (req, res, next) => {
   const err = new AppError(`There is no route for this ${req.originalUrl}`);

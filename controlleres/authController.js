@@ -68,6 +68,21 @@ exports.signIn = async function (req, res, next) {
     return next(new AppError(error.message, 400));
   }
 };
+exports.forgotPassword = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
+      return next(new AppError("there is no user with this email", 404));
+    }
+
+    const resetToken = user.createPasswordResetToken();
+
+    await user.save({ validateBeforeSave: false });
+  } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
+};
 
 exports.protect = async (req, res, next) => {
   try {
@@ -105,20 +120,4 @@ exports.restrictTo = (...roles) => {
 
     next();
   };
-};
-
-exports.forgotPassword = async (req, res, next) => {
-  try {
-    const user = await User.findOne({ email: req.body.email });
-
-    if (!user) {
-      return next(new AppError("there is no user with this email", 404));
-    }
-
-    const resetToken = user.createPasswordResetToken();
-
-    await user.save({ validateBeforeSave: false });
-  } catch (error) {
-    return next(new AppError(error.message, 500));
-  }
 };
