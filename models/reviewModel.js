@@ -12,7 +12,8 @@ const rivewsSchema = new mongoose.Schema({
   },
   rate: {
     type: Number,
-    enum: [1, 2, 3, 4, 5],
+    min: 1,
+    max: 5,
     default: 1,
     require: true,
   },
@@ -26,13 +27,22 @@ rivewsSchema.pre("save", async function (next) {
   try {
     const houseId = this.houseId;
     const reviews = await Rivew.find({ houseId });
-    const totalRateSum = reviews.reduce((sum, review) => sum + review.Rate, 0);
+    const totalRateSum = reviews.reduce(
+      (sum, review) => sum + Number(review.rate),
+      0
+    );
 
     if (reviews.length == 0) {
       await House.findByIdAndUpdate(houseId, { rate: this.rate });
+      console.log("here");
       return next();
     }
-    const averageRate = totalRateSum / reviews.length;
+    const averageRate = Number(
+      (this.rate + totalRateSum) / (reviews.length + 1)
+    ).toFixed(2);
+    // console.log(totalRateSum);
+    // console.log(averageRate);
+    // console.log(reviews.length);
 
     await House.findByIdAndUpdate(houseId, { rate: averageRate });
   } catch (error) {
