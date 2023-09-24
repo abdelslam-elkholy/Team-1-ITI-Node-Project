@@ -21,7 +21,7 @@ const sendToken = (user, statusCode, res) => {
     httpOnly: true,
   };
 
-  res.cookie("jwt", token, cookieOptions);
+  res.cookie("token", token, cookieOptions);
 
   user.password = undefined;
 
@@ -73,11 +73,8 @@ exports.protect = async (req, res, next) => {
   try {
     let token;
 
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      token = req.headers.authorization.split(" ")[1];
+    if (req.headers.cookie && req.headers.cookie.startsWith("token")) {
+      token = req.headers.cookie.split("=")[1];
     }
 
     if (!token) return next(new AppError("you are not logged in", 401));

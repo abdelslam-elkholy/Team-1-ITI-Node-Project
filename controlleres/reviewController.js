@@ -3,7 +3,7 @@ const { AppError } = require("../utils/appError");
 
 exports.getAllRivews = async (req, res, next) => {
   try {
-    const rivews = await Rivew.find();
+    const rivews = await Rivew.find().populate("userId houseId");
 
     res.status(200).json({
       status: "success",
@@ -42,6 +42,7 @@ exports.createRivew = async (req, res, next) => {
       },
     });
   } catch (error) {
+    console.log(error);
     return next(new AppError(error.message, 500));
   }
 };

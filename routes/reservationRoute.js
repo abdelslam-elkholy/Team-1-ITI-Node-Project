@@ -6,7 +6,7 @@ const authController = require("./../controlleres/authController");
 router
   .route("/")
   .get(
-    authController.restrictTo("admin"),
+    // authController.restrictTo("admin"),
     reservationController.getAllReservations
   )
   .post(authController.protect, reservationController.createReservation);

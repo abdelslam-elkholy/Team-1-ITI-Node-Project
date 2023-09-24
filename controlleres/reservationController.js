@@ -4,7 +4,7 @@ const { AppError } = require("../utils/appError");
 
 exports.getAllReservations = async (req, res, next) => {
   try {
-    const reservations = await Reservation.find();
+    const reservations = await Reservation.find().populate("userId houseId");
 
     res.status(200).json({
       status: "success",
