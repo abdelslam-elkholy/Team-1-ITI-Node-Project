@@ -5,7 +5,11 @@ const houseController = require("./../controlleres/houseController");
 router
   .route("/")
   .get(houseController.getAllHouses)
-  .post(houseController.uploadHouseImages, houseController.createHouse);
+  .post(
+    houseController.uploadHouseImages,
+    houseController.resizeHouseImages,
+    houseController.createHouse
+  );
 router
   .route("/:id")
   .get(houseController.getHouse)

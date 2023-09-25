@@ -1,16 +1,9 @@
 const House = require("../models/houseModel");
 const { AppError } = require("../utils/appError");
 const multer = require("multer");
+const sharp = require("sharp");
 
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/img/houses");
-  },
-  filename: (req, file, cb) => {
-    const ext = file.mimetype.split("/")[1];
-    cb(null, `house-${Date.now()}.${ext}`);
-  },
-});
+const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image")) cb(null, true);
@@ -24,6 +17,26 @@ const upload = multer({
 
 exports.uploadHouseImages = upload.array("images", 10);
 
+exports.resizeHouseImages = (req, res, next) => {
+  if (!req.files || req.files.length === 0) return next();
+
+  req.body.images = [];
+
+  req.files.forEach((file) => {
+    const ext = file.mimetype.split("/")[1];
+    const filename = `house-${Date.now()}.${ext}`;
+
+    sharp(file.buffer)
+      .resize(500, 500)
+      .toFormat("jpeg")
+      .jpeg({ quality: 90 })
+      .toFile(`public/img/houses/${filename}`);
+
+    req.body.images.push(filename);
+  });
+
+  next();
+};
 exports.getAllHouses = async (req, res, next) => {
   try {
     const houses = await House.find();
@@ -42,8 +55,8 @@ exports.getAllHouses = async (req, res, next) => {
 
 exports.createHouse = async (req, res, next) => {
   try {
-    const images = req.files.map((file) => file.filename);
-    req.body.images = images;
+    // const images = req.files.map((file) => file.filename);
+    // req.body.images = images;
     const newHouse = await House.create(req.body);
 
     res.status(201).json({
