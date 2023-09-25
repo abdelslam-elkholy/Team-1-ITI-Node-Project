@@ -55,6 +55,11 @@ const houseSchema = new mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       ref: "User",
     },
+    region: {
+      type: String,
+      enum: [],
+      default: "Cairo",
+    },
   },
   {
     timestamps: true,
