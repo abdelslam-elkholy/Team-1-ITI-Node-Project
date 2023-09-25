@@ -27,7 +27,7 @@ exports.resizeHouseImages = (req, res, next) => {
     const filename = `house-${Date.now()}.${ext}`;
 
     sharp(file.buffer)
-      .resize(500, 500)
+      .resize(750, 500)
       .toFormat("jpeg")
       .jpeg({ quality: 90 })
       .toFile(`public/img/houses/${filename}`);
