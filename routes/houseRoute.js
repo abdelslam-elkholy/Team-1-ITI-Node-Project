@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const houseController = require("../controllers/houseController");
-const authController = require("../controllers/authController");
+const houseController = require("../controlleres/houseController");
+const authController = require("../controlleres/authController");
 
 const protectAdminRoutes = [
   authController.protect,

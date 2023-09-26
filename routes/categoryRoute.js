@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const categoryController = require("../controllers/categoryController");
-const authController = require("../controllers/authController");
+const categoryController = require("../controlleres/categoryController");
+const authController = require("../controlleres/authController");
 
 const protectAdminRoutes = [
   authController.protect,
