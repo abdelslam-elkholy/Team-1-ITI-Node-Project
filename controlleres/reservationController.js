@@ -17,6 +17,7 @@ exports.getAllReservations = async (req, res, next) => {
     return next(new AppError(error.message, 500));
   }
 };
+
 exports.createReservation = async (req, res, next) => {
   try {
     const house = await House.findById(req.body.houseId);
@@ -83,30 +84,6 @@ exports.createReservation = async (req, res, next) => {
   }
 };
 
-// exports.getReservation = async (req, res, next) => {
-//   try {
-//     const reservation = await Reservation.findById(req.params.id);
-
-//     if (!reservation) {
-//       return next(
-//         new AppError(
-//           `There is no reservation with the id ${req.params.id}`,
-//           404
-//         )
-//       );
-//     }
-
-//     res.status(200).json({
-//       status: "Success",
-//       data: {
-//         reservation,
-//       },
-//     });
-//   } catch (error) {
-//     return next(new AppError(error.message, 500));
-//   }
-// };
-
 exports.deleteReservation = async (req, res, next) => {
   try {
     const reservation = await Reservation.findByIdAndDelete(req.params.id);
@@ -117,6 +94,12 @@ exports.deleteReservation = async (req, res, next) => {
           `There is no reservation with the id ${req.params.id}`,
           404
         )
+      );
+    }
+
+    if (req.user.role !== "admin" && req.user._id !== reservation.userId) {
+      return next(
+        new AppError("You are not allowed to delete this reservation", 403)
       );
     }
 
@@ -162,3 +145,27 @@ exports.getReservationsByHouseId = async (req, res, next) => {
     return next(new AppError(error.message, 500));
   }
 };
+
+// exports.getReservation = async (req, res, next) => {
+//   try {
+//     const reservation = await Reservation.findById(req.params.id);
+
+//     if (!reservation) {
+//       return next(
+//         new AppError(
+//           `There is no reservation with the id ${req.params.id}`,
+//           404
+//         )
+//       );
+//     }
+
+//     res.status(200).json({
+//       status: "Success",
+//       data: {
+//         reservation,
+//       },
+//     });
+//   } catch (error) {
+//     return next(new AppError(error.message, 500));
+//   }
+// };
