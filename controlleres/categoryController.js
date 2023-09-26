@@ -4,10 +4,7 @@ const { AppError } = require("../utils/appError");
 
 exports.createCategory = async (req, res, next) => {
   try {
-    const category = await Category.create({
-      name: req.body.name,
-      icon: req.body.icon,
-    });
+    const category = await Category.create(req.body);
     res.status(201).json({
       message: "created",
       data: {
@@ -52,6 +49,7 @@ exports.getCategory = async (req, res, next) => {
     return next(new AppError(error.message, 500));
   }
 };
+
 exports.updateCategory = async (req, res, next) => {
   try {
     const category = await Category.findByIdAndUpdate(req.params.id, req.body, {

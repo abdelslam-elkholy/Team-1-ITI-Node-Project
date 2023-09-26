@@ -1,16 +1,22 @@
 const express = require("express");
 const router = express.Router();
-const categoryCountroller = require("./../controlleres/categoryController");
-const authController = require("./../controlleres/authController");
+const categoryController = require("../controllers/categoryController");
+const authController = require("../controllers/authController");
+
+const protectAdminRoutes = [
+  authController.protect,
+  authController.restrictTo("admin"),
+];
 
 router
   .route("/")
-  .get(categoryCountroller.getCategories)
-  .post(categoryCountroller.createCategory);
+  .get(categoryController.getCategories)
+  .post(...protectAdminRoutes, categoryController.createCategory);
+
 router
   .route("/:id")
-  .get(categoryCountroller.getCategory)
-  .patch(categoryCountroller.updateCategory)
-  .delete(categoryCountroller.deleteCategory);
+  .get(categoryController.getCategory)
+  .patch(...protectAdminRoutes, categoryController.updateCategory)
+  .delete(...protectAdminRoutes, categoryController.deleteCategory);
 
 module.exports = router;
