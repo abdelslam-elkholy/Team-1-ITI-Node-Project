@@ -23,35 +23,38 @@ const rivewsSchema = new mongoose.Schema({
   },
 });
 
-// pre save middleware to calculate the average rate of the house
 rivewsSchema.pre("save", async function (next) {
   try {
     const houseId = this.houseId;
     const reviews = await Rivew.find({ houseId });
 
-    // calculate the Total rate
     const totalRateSum = reviews.reduce(
       (sum, review) => sum + Number(review.rate),
       0
     );
 
-    //check if there is no reviews
     if (reviews.length == 0) {
       await House.findByIdAndUpdate(houseId, { rate: this.rate });
       console.log("here");
       return next();
     }
 
-    // calculate the average rate
     const averageRate = Number(
       (this.rate + totalRateSum) / (reviews.length + 1)
     ).toFixed(2);
 
-    // update the house rate
     await House.findByIdAndUpdate(houseId, { rate: averageRate });
   } catch (error) {
     next(error);
   }
+});
+
+rivewsSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "userId houseId",
+    select: "-__v",
+  });
+  next();
 });
 
 const Rivew = mongoose.model("rivew", rivewsSchema);

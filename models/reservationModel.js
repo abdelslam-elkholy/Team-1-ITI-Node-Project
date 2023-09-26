@@ -30,5 +30,13 @@ const reservationSchema = new mongoose.Schema(
   }
 );
 
+reservationSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "userId houseId",
+    select: "-__v",
+  });
+  next();
+});
+
 const Reservation = mongoose.model("reservation", reservationSchema);
 module.exports = Reservation;

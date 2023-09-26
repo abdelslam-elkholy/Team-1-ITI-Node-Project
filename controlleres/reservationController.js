@@ -4,7 +4,7 @@ const { AppError } = require("../utils/appError");
 
 exports.getAllReservations = async (req, res, next) => {
   try {
-    const reservations = await Reservation.find().populate("userId houseId");
+    const reservations = await Reservation.find();
 
     res.status(200).json({
       status: "success",
@@ -83,29 +83,29 @@ exports.createReservation = async (req, res, next) => {
   }
 };
 
-exports.getReservation = async (req, res, next) => {
-  try {
-    const reservation = await Reservation.findById(req.params.id);
+// exports.getReservation = async (req, res, next) => {
+//   try {
+//     const reservation = await Reservation.findById(req.params.id);
 
-    if (!reservation) {
-      return next(
-        new AppError(
-          `There is no reservation with the id ${req.params.id}`,
-          404
-        )
-      );
-    }
+//     if (!reservation) {
+//       return next(
+//         new AppError(
+//           `There is no reservation with the id ${req.params.id}`,
+//           404
+//         )
+//       );
+//     }
 
-    res.status(200).json({
-      status: "Success",
-      data: {
-        reservation,
-      },
-    });
-  } catch (error) {
-    return next(new AppError(error.message, 500));
-  }
-};
+//     res.status(200).json({
+//       status: "Success",
+//       data: {
+//         reservation,
+//       },
+//     });
+//   } catch (error) {
+//     return next(new AppError(error.message, 500));
+//   }
+// };
 
 exports.deleteReservation = async (req, res, next) => {
   try {
