@@ -7,6 +7,7 @@ router
   .route("/")
   .get(reviewController.getAllRivews)
   .post(authController.protect, reviewController.createRivew);
+
 router
   .route("/:id")
   .get(reviewController.getRivew)

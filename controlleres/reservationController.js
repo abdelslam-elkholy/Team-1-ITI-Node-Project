@@ -86,7 +86,7 @@ exports.createReservation = async (req, res, next) => {
 
 exports.deleteReservation = async (req, res, next) => {
   try {
-    const reservation = await Reservation.findByIdAndDelete(req.params.id);
+    const reservation = await Reservation.findById(req.params.id);
 
     if (!reservation) {
       return next(
@@ -102,6 +102,8 @@ exports.deleteReservation = async (req, res, next) => {
         new AppError("You are not allowed to delete this reservation", 403)
       );
     }
+
+    await Reservation.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
       status: "success",
