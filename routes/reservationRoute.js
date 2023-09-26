@@ -7,7 +7,7 @@ router
   .route("/")
   .get(
     authController.protect,
-    authController.accessControl,
+    authController.restrictTo("admin"),
     reservationController.getAllReservations
   )
   .post(authController.protect, reservationController.createReservation);
@@ -26,6 +26,13 @@ router
     authController.accessControl,
     reservationController.getReservationsByUserId
   );
-router.route("/house/:id").get(reservationController.getReservationsByHouseId);
+
+router
+  .route("/house/:id")
+  .get(
+    authController.protect,
+    authController.restrictTo("admin"),
+    reservationController.getReservationsByHouseId
+  );
 
 module.exports = router;

@@ -37,6 +37,7 @@ exports.resizeHouseImages = (req, res, next) => {
 
   next();
 };
+
 exports.getAllHouses = async (req, res, next) => {
   try {
     const houses = await House.find();

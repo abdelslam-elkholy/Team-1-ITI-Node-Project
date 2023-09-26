@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const houseController = require("./../controlleres/houseController");
+const authController = require("./../controlleres/authController");
 
 router
   .route("/")
@@ -8,12 +9,22 @@ router
   .post(
     houseController.uploadHouseImages,
     houseController.resizeHouseImages,
+    authController.protect,
+    authController.restrictTo("admin"),
     houseController.createHouse
   );
 router
   .route("/:id")
   .get(houseController.getHouse)
-  .patch(houseController.updateHouse)
-  .delete(houseController.deleteHouse);
+  .patch(
+    authController.protect,
+    authController.restrictTo("admin"),
+    houseController.updateHouse
+  )
+  .delete(
+    authController.protect,
+    authController.restrictTo("admin"),
+    houseController.deleteHouse
+  );
 
 module.exports = router;

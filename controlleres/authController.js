@@ -123,10 +123,6 @@ exports.restrictTo = (...roles) => {
 };
 
 exports.accessControl = (req, res, next) => {
-  if (!req.user) {
-    return next(new AppError("you are not logged in", 401));
-  }
-
   if (req.user.role === "admin") {
     return next();
   }
@@ -138,13 +134,13 @@ exports.accessControl = (req, res, next) => {
   return next(new AppError("you dont have permission", 403));
 };
 
-exports.logout = (req, res, next) => {
-  res.cookie("token", "loggedout", {
-    expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true,
-  });
+// exports.logout = (req, res, next) => {
+//   res.cookie("token", "loggedout", {
+//     expires: new Date(Date.now() + 10 * 1000),
+//     httpOnly: true,
+//   });
 
-  res.status(200).json({
-    status: "success",
-  });
-};
+//   res.status(200).json({
+//     status: "success",
+//   });
+// };
