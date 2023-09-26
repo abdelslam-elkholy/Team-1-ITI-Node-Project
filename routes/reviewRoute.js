@@ -11,10 +11,16 @@ router
 router
   .route("/:id")
   .get(reviewController.getRivew)
-  .patch(reviewController.updateRivew)
-  .delete(reviewController.deleteRivew);
+  .patch(authController.protect, reviewController.updateRivew)
+  .delete(authController.protect, reviewController.deleteRivew);
 
-router.route("/user/:id").get(reviewController.getRivewsByUserId);
+router
+  .route("/user/:id")
+  .get(
+    authController.protect,
+    authController.accessControl,
+    reviewController.getRivewsByUserId
+  );
 router.route("/house/:id").get(reviewController.getRivewsByHouseId);
 
 module.exports = router;
