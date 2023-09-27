@@ -87,7 +87,7 @@ exports.getHouse = async (req, res, next) => {
     res.status(200).json({
       status: "Success",
       data: {
-        house: { house },
+        house,
       },
     });
   } catch (error) {

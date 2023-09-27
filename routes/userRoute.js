@@ -23,6 +23,8 @@ router
   .route("/deleteMe")
   .delete(authCountroller.protect, userController.deleteMe);
 
+router.route("/getMe").get(authCountroller.protect, userController.getMe);
+
 // router.route("/signout").get(authCountroller.signOut);
 // router.route("/resetPassword/:token").patch(authCountroller.resetPassword);
 // router.route("/updatePassword").patch(authCountroller.updatePassword);
