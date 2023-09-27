@@ -63,8 +63,24 @@ const houseSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
+
+houseSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "houseId",
+  localField: "_id",
+});
+
+houseSchema.virtual("reservations", {
+  ref: "Reservation",
+  foreignField: "houseId",
+  localField: "_id",
+});
 
 const House = mongoose.model("house", houseSchema);
 
