@@ -38,6 +38,7 @@ const houseSchema = new mongoose.Schema(
     rate: {
       type: Number,
     },
+
     description: {
       type: String,
     },
@@ -60,7 +61,9 @@ const houseSchema = new mongoose.Schema(
       enum: [],
       default: "Cairo",
     },
+    unavailableDates: { type: [Date] },
   },
+
   {
     timestamps: true,
   },
@@ -71,16 +74,85 @@ const houseSchema = new mongoose.Schema(
 );
 
 houseSchema.virtual("reviews", {
-  ref: "Review",
+  ref: "rivew",
   foreignField: "houseId",
   localField: "_id",
 });
 
-houseSchema.virtual("reservations", {
-  ref: "Reservation",
-  foreignField: "houseId",
-  localField: "_id",
-});
+houseSchema.methods.calculateUnavailableDates = async function () {
+  const reservations = await mongoose
+    .model("reservation")
+    .find({ houseId: this._id });
+
+  const unavailableDates = [];
+
+  for (const reservation of reservations) {
+    const checkIn = reservation.checkIn;
+    const checkOut = reservation.checkOut;
+
+    let currentDate = new Date(checkIn);
+
+    while (currentDate <= checkOut) {
+      unavailableDates.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+  }
+
+  return unavailableDates;
+};
+
+// houseSchema.virtual("reservations", {
+//   ref: "reservation",
+//   foreignField: "houseId",
+//   localField: "_id",
+// });
+
+// houseSchema.virtual("unavailableDates").get(async function () {
+//   const reservations = await mongoose
+//     .model("reservation")
+//     .find({ houseId: this._id });
+
+//   const unavailableDates = [];
+
+//   for (const reservation of reservations) {
+//     const checkIn = reservation.checkIn;
+//     const checkOut = reservation.checkOut;
+
+//     let currentDate = new Date(checkIn);
+
+//     while (currentDate <= checkOut) {
+//       // console.log(currentDate, unavailableDates);
+
+//       unavailableDates.push(new Date(currentDate));
+//       currentDate.setDate(currentDate.getDate() + 1);
+//     }
+
+//     // unavailableDates.push(...datesBetween);
+//   }
+
+//   console.log(unavailableDates);
+
+//   return unavailableDates;
+// });
+
+// houseSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: "unavailableDates",
+//     select: "-__v",
+//   }).exec();
+
+//   next();
+// });
+
+// houseSchema.pre(/^find/, function (next) {
+//   console.log("here2");
+//   this.populate({
+//     path: "reviews",
+//     select: "-__v",
+//   });
+
+//   next();
+// });
 
 const House = mongoose.model("house", houseSchema);
 

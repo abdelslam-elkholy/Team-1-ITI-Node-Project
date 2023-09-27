@@ -43,13 +43,17 @@ rivewsSchema.pre("save", async function (next) {
       (this.rate + totalRateSum) / (reviews.length + 1)
     ).toFixed(2);
 
-    await House.findByIdAndUpdate(houseId, { rate: averageRate });
+    await House.findByIdAndUpdate(houseId, {
+      rate: averageRate,
+      ratesNum: reviews.length + 1,
+    });
   } catch (error) {
     next(error);
   }
 });
 
 rivewsSchema.pre(/^find/, function (next) {
+  console.log("here");
   this.populate({
     path: "userId houseId",
     select: "-__v",

@@ -73,7 +73,10 @@ exports.createHouse = async (req, res, next) => {
 
 exports.getHouse = async (req, res, next) => {
   try {
-    const house = await House.findById(req.params.id);
+    const house = await House.findById(req.params.id).populate("reviews");
+
+    const unavailableDates = await house.calculateUnavailableDates();
+    house.unavailableDates = unavailableDates;
 
     if (!house) {
       return next(
@@ -84,7 +87,7 @@ exports.getHouse = async (req, res, next) => {
     res.status(200).json({
       status: "Success",
       data: {
-        house,
+        house: { house },
       },
     });
   } catch (error) {
