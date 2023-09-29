@@ -1,32 +1,47 @@
 const express = require("express");
 const router = express.Router();
-const authCountroller = require("./../controlleres/authController");
+const authController = require("./../controlleres/authController");
 const userController = require("./../controlleres/userController");
 
-router.route("/signup").post(authCountroller.signUp);
-router.route("/signin").post(authCountroller.signIn);
+const protectAdminRoutes = [
+  authController.protect,
+  authController.restrictTo("admin"),
+];
 
-router.route("/").get(userController.getAllUsers);
-router.route("/deactivated").get(userController.getDeactivatedUsers);
-router.route("/hosts").get(userController.getHosts);
+router.route("/signup").post(authController.signUp);
+router.route("/signin").post(authController.signIn);
 
-router.route("/:id").delete(userController.deleteUser);
-router.route("/activate/:id").get(userController.activateUser);
-router.route("/deactivate/:id").delete(userController.deactivateUser);
-router.route("/makeHost/:id").get(userController.makeHost);
-router.route("/deleteHost/:id").delete(userController.deleteHost);
+router.route("/").get(...protectAdminRoutes, userController.getAllUsers);
+router
+  .route("/deactivated")
+  .get(...protectAdminRoutes, userController.getDeactivatedUsers);
+router.route("/hosts").get(...protectAdminRoutes, userController.getHosts);
+
+router.route("/:id").delete(...protectAdminRoutes, userController.deleteUser);
+router
+  .route("/activate/:id")
+  .get(...protectAdminRoutes, userController.activateUser);
+router
+  .route("/deactivate/:id")
+  .delete(...protectAdminRoutes, userController.deactivateUser);
+router
+  .route("/makeHost/:id")
+  .get(...protectAdminRoutes, userController.makeHost);
+router
+  .route("/deleteHost/:id")
+  .delete(...protectAdminRoutes, userController.deleteHost);
 
 router
   .route("/updateMe")
-  .patch(authCountroller.protect, userController.updateMe);
+  .patch(authController.protect, userController.updateMe);
 router
   .route("/deleteMe")
-  .delete(authCountroller.protect, userController.deleteMe);
+  .delete(authController.protect, userController.deleteMe);
 
-router.route("/getMe").get(authCountroller.protect, userController.getMe);
+router.route("/getMe").get(authController.protect, userController.getMe);
 
-// router.route("/signout").get(authCountroller.signOut);
-// router.route("/resetPassword/:token").patch(authCountroller.resetPassword);
-// router.route("/updatePassword").patch(authCountroller.updatePassword);
-// router.route("/forgotPassword").post(authCountroller.forgotPassword);
+// router.route("/signout").get(authController.signOut);
+// router.route("/resetPassword/:token").patch(authController.resetPassword);
+// router.route("/updatePassword").patch(authController.updatePassword);
+// router.route("/forgotPassword").post(authController.forgotPassword);
 module.exports = router;
