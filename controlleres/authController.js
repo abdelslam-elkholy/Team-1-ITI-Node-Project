@@ -90,9 +90,9 @@ exports.protect = async (req, res, next) => {
 
     if (
       req.headers.authorization &&
-      req.headers.authorization.startsWith("token")
+      req.headers.authorization.startsWith("Bearer ")
     ) {
-      token = req.headers.authorization.split("=")[1];
+      token = req.headers.authorization.split(" ")[1];
     }
 
     if (!token) return next(new AppError("you are not logged in", 401));
