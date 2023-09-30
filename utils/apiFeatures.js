@@ -21,7 +21,7 @@ class APIFeatures {
       const sortBy = this.queryString.sort.split(",").join(" ");
       this.query = this.query.sort(sortBy);
     } else {
-      this.query = this.query.sort("-ratingsAverage");
+      this.query = this.query.sort("-rate");
     }
 
     return this;
@@ -39,7 +39,7 @@ class APIFeatures {
   }
 
   pageination() {
-    const limit = this.queryString.limit * 1 || 100;
+    const limit = this.queryString.limit * 1 || 8;
     const page = this.queryString.page * 1 || 1;
     const skip = (page - 1) * limit;
     this.query = this.query.skip(skip).limit(limit);
