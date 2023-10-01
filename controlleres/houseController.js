@@ -24,7 +24,7 @@ exports.resizeHouseImages = (req, res, next) => {
 
   req.files.forEach((file) => {
     // const ext = file.mimetype.split("/")[1];
-    const filename = `house-${Date.now()}.png`;
+    const filename = `house-${Date.now()}.jpeg`;
 
     sharp(file.buffer)
       .resize(750, 500)

@@ -3,7 +3,10 @@ const { AppError } = require("../utils/appError");
 
 exports.createWishlist = async (req, res, next) => {
   try {
-    const newWishlist = await Wishlist.create(req.body);
+    const newWishlist = await Wishlist.create({
+      ...req.body,
+      userId: req.user._id,
+    });
 
     res.status(201).json({
       status: "success",
@@ -40,10 +43,6 @@ exports.deleteWishlist = async (req, res, next) => {
 exports.getWishlistsByUserId = async (req, res, next) => {
   try {
     const wishlist = await Wishlist.find({ userId: req.user._id });
-
-    if (!wishlist) {
-      return next(new AppError(`There is no wishlist for this user`, 404));
-    }
 
     res.status(200).json({
       status: "Success",

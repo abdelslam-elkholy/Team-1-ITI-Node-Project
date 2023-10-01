@@ -101,6 +101,11 @@ houseSchema.methods.calculateUnavailableDates = async function () {
   return unavailableDates;
 };
 
+houseSchema.pre(/^find/, function (next) {
+  this.populate("category");
+  next();
+});
+
 // houseSchema.virtual("reservations", {
 //   ref: "reservation",
 //   foreignField: "houseId",

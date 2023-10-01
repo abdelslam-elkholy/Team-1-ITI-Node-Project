@@ -3,16 +3,10 @@ const router = express.Router();
 const wishlistController = require("../controlleres/wishlistController");
 const authController = require("./../controlleres/authController");
 
-router
-  .route("/")
+router.use(authController.protect);
 
-  .post(authController.protect, wishlistController.createWishlist);
-
-router
-  .route("/:id")
-
-  .delete(wishlistController.deleteWishlist);
-
-router.route("/user/:id").get(wishlistController.getWishlistsByUserId);
+router.route("/").post(wishlistController.createWishlist);
+router.route("/:id").delete(wishlistController.deleteWishlist);
+router.route("/me").get(wishlistController.getWishlistsByUserId);
 
 module.exports = router;
