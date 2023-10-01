@@ -24,4 +24,5 @@ router
   .patch(...protectAdminRoutes, houseController.updateHouse)
   .delete(...protectAdminRoutes, houseController.deleteHouse);
 
+router.route("/category/:Id").get(houseController.getHousesByCategory);
 module.exports = router;

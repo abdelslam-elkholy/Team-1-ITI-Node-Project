@@ -49,7 +49,8 @@ const houseSchema = new mongoose.Schema(
     },
 
     category: {
-      type: String,
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "category",
       required: true,
     },
     userId: {
@@ -101,10 +102,13 @@ houseSchema.methods.calculateUnavailableDates = async function () {
   return unavailableDates;
 };
 
-houseSchema.pre(/^find/, function (next) {
-  this.populate("category");
-  next();
-});
+// houseSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: "category",
+//     select: "-__v",
+//   });
+//   next();
+// });
 
 // houseSchema.virtual("reservations", {
 //   ref: "reservation",

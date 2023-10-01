@@ -2,7 +2,7 @@ const House = require("../models/houseModel");
 const { AppError } = require("../utils/appError");
 const multer = require("multer");
 const sharp = require("sharp");
-
+const ApiFeatures = require("../utils/apiFeatures");
 const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
@@ -40,7 +40,13 @@ exports.resizeHouseImages = (req, res, next) => {
 
 exports.getAllHouses = async (req, res, next) => {
   try {
-    const houses = await House.find();
+    const features = new ApiFeatures(House.find(), req.query)
+      .filter()
+      .sorting()
+      .feildsSelect()
+      .pageination();
+    console.log(req.query);
+    const houses = await features.query;
 
     res.status(200).json({
       status: "success",
@@ -132,6 +138,21 @@ exports.deleteHouse = async (req, res, next) => {
       status: "success",
       data: {
         deletedHouse: house,
+      },
+    });
+  } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
+};
+
+exports.getHousesByCategory = async (req, res, next) => {
+  try {
+    const houses = await House.find({ category: req.params.Id });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        houses,
       },
     });
   } catch (error) {

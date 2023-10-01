@@ -34,10 +34,6 @@ exports.getCategories = async (req, res, next) => {
 exports.getCategory = async (req, res, next) => {
   try {
     const category = await Category.findById(req.params.id);
-    if (!category)
-      return next(
-        new AppError(`There Is no Category With The Id ${req.params.id}`, 404)
-      );
 
     res.status(200).json({
       message: "success",
