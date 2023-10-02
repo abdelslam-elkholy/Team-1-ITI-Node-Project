@@ -31,9 +31,9 @@ const reservationSchema = new mongoose.Schema(
 );
 
 reservationSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: "userId houseId",
-    select: "-__v",
+  this.populate("userId").populate({
+    path: "houseId",
+    select: "name",
   });
   next();
 });

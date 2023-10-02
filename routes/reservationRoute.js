@@ -11,7 +11,7 @@ const protectAdminRoutes = [
 router
   .route("/")
   .get(...protectAdminRoutes, reservationController.getAllReservations)
-  .post(authController.protect, reservationController.createReservation);
+  .post(authController.protect, reservationController.payment);
 
 router
   .route("/:id")
