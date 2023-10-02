@@ -13,6 +13,7 @@ router
   .get(...protectAdminRoutes, reservationController.getAllReservations)
   .post(authController.protect, reservationController.payment);
 
+router.get("/success", reservationController.createReservation);
 router
   .route("/:id")
   .delete(authController.protect, reservationController.deleteReservation);

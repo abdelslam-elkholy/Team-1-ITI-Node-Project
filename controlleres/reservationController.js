@@ -27,18 +27,18 @@ exports.payment = async (req, res, next) => {
   }
 
   const checkAvailability = await Reservation.find({
-    houseId: req.body.houseId,
+    houseId: id,
     $or: [
       {
         checkIn: {
-          $gte: req.body.checkIn,
-          $lte: req.body.checkOut,
+          $gte: checkIn,
+          $lte: checkOut,
         },
       },
       {
         checkOut: {
-          $gte: req.body.checkIn,
-          $lte: req.body.checkOut,
+          $gte: checkIn,
+          $lte: checkOut,
         },
       },
     ],
@@ -71,21 +71,26 @@ exports.payment = async (req, res, next) => {
         },
       ],
       mode: "payment",
-      success_url: `${req.protocol}://${req.get("host")}/`,
+      success_url: `${req.protocol}://${req.get(
+        "host"
+      )}/reservations/success?id=${id}&checkIn=${checkIn}&checkout=${checkOut}&price=${price}&userId=${
+        req.user._id
+      } `,
+      // success_url: `${req.protocol}://5700/`,
       cancel_url: "http://localhost:4242/cancel",
     });
 
     // res.redirect(303, session.url);
 
-    const newReservation = await Reservation.create({
-      houseId: id,
-      checkIn,
-      checkOut,
-      userId: req.user._id,
-      price,
+    // const newReservation = await Reservation.create({
+    //   houseId: id,
+    //   checkIn,
+    //   checkOut,
+    //   userId: req.user._id,
+    //   price,
 
-      // stripeSessionId: session.id,
-    });
+    //   // stripeSessionId: session.id,
+    // });
     res.status(200).json({
       status: "success",
       session,
@@ -124,57 +129,13 @@ exports.getAllReservations = async (req, res, next) => {
 };
 
 exports.createReservation = async (req, res, next) => {
+  const { id, checkIn, checkOut, price, userId } = req.query;
   try {
-    const house = await House.findById(req.body.houseId);
-
-    const price =
-      (house.price *
-        (new Date(req.body.checkOut) - new Date(req.body.checkIn))) /
-      (1000 * 60 * 60 * 24);
-
-    const isValideDate =
-      new Date(req.body.checkIn) < new Date(req.body.checkOut) &&
-      new Date(req.body.checkIn) > new Date();
-
-    if (!isValideDate) {
-      return next(
-        new AppError(
-          `The checkin date must be before the checkout date and after today`,
-          400
-        )
-      );
-    }
-
-    const checkAvailability = await Reservation.find({
-      houseId: req.body.houseId,
-      $or: [
-        {
-          checkIn: {
-            $gte: req.body.checkIn,
-            $lte: req.body.checkOut,
-          },
-        },
-        {
-          checkOut: {
-            $gte: req.body.checkIn,
-            $lte: req.body.checkOut,
-          },
-        },
-      ],
-    });
-
-    if (checkAvailability.length > 0) {
-      return next(
-        new AppError(
-          `The house is not available between ${req.body.checkIn} and ${req.body.checkOut}`,
-          400
-        )
-      );
-    }
-
     const newReservation = await Reservation.create({
-      ...req.body,
-      userId: req.user._id,
+      houseId: id,
+      checkIn,
+      checkOut,
+      userId,
       price,
     });
 
