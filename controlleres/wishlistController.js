@@ -8,10 +8,14 @@ exports.createWishlist = async (req, res, next) => {
       userId: req.user._id,
     });
 
+    const wishlist = await Wishlist.findById(newWishlist._id).populate(
+      "houseId"
+    );
+
     res.status(201).json({
       status: "success",
       data: {
-        wishlist: newWishlist,
+        wishlist: wishlist.houseId,
       },
     });
   } catch (error) {
