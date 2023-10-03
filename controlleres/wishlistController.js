@@ -21,7 +21,10 @@ exports.createWishlist = async (req, res, next) => {
 
 exports.deleteWishlist = async (req, res, next) => {
   try {
-    const wishlist = await Wishlist.findByIdAndDelete(req.params.id);
+    const wishlist = await Wishlist.findOneAndDelete({
+      houseId: req.params.id,
+      userId: req.user._id,
+    });
 
     if (!wishlist) {
       return next(
@@ -42,8 +45,8 @@ exports.deleteWishlist = async (req, res, next) => {
 
 exports.getWishlistsByUserId = async (req, res, next) => {
   try {
-    const wishlist = await Wishlist.find({ userId: req.user._id });
-
+    const wishlists = await Wishlist.find({ userId: req.user._id });
+    const wishlist = wishlists.map((wishlist) => wishlist.houseId);
     res.status(200).json({
       status: "Success",
       data: {
