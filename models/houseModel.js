@@ -102,21 +102,6 @@ houseSchema.methods.calculateUnavailableDates = async function () {
   return unavailableDates;
 };
 
-houseSchema.post(/^find/, async function (req, res, next) {
-  if (!req.user) {
-    return next();
-  }
-  const inwishlist = await mongoose
-    .model("wishlist")
-    .findOne({ userId: req.user._id, houseId: this._id });
-  if (inwishlist) {
-    this.inwishlist = true;
-  } else {
-    this.inwishlist = false;
-  }
-  next();
-});
-
 const House = mongoose.model("house", houseSchema);
 
 module.exports = House;
