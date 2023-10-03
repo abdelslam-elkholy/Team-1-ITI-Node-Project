@@ -5,17 +5,17 @@ const Stripe = require("stripe");
 const stripe = Stripe(
   "sk_test_51Nvcg1Guqo6CM9lqtfEESuSSTnVQIfGIgvZutCwww5kA80K51mTyR8xURpmJZ8bUFnaZGGSiCmQPHeWuQK99QPUI009wLJkllV"
 );
-console.log(process.env.STRIPE_SECRET_KEY);
+
 exports.payment = async (req, res, next) => {
   const { id, checkIn, checkOut } = req.body;
   const house = await House.findById(id);
 
-  const price =
+  const price = parseInt(
     (house.price * (new Date(checkOut) - new Date(checkIn))) /
-    (1000 * 60 * 60 * 24);
-
+      (1000 * 60 * 60 * 24)
+  );
   const isValideDate =
-    new Date(checkIn) < new Date(checkOut) && new Date(checkIn) > new Date();
+    new Date(checkIn) < new Date(checkOut) && new Date(checkIn) >= new Date();
 
   if (!isValideDate) {
     return next(
@@ -73,40 +73,16 @@ exports.payment = async (req, res, next) => {
       mode: "payment",
       success_url: `${req.protocol}://${req.get(
         "host"
-      )}/reservations/success?id=${id}&checkIn=${checkIn}&checkout=${checkOut}&price=${price}&userId=${
+      )}/reservations/success?id=${id}&checkIn=${checkIn}&checkOut=${checkOut}&price=${price}&userId=${
         req.user._id
       } `,
-      // success_url: `${req.protocol}://5700/`,
-      cancel_url: "http://localhost:4242/cancel",
+      cancel_url: "http://localhost:5173/",
     });
 
-    // res.redirect(303, session.url);
-
-    // const newReservation = await Reservation.create({
-    //   houseId: id,
-    //   checkIn,
-    //   checkOut,
-    //   userId: req.user._id,
-    //   price,
-
-    //   // stripeSessionId: session.id,
-    // });
     res.status(200).json({
       status: "success",
       session,
     });
-    // res.redirect(303, session.url);
-    // res.status(201).json({
-    //   status: "success",
-    //   clientSecret: session.client_secret,
-    //   reservation: newReservation,
-    //   url: session.url,
-    // });
-    // res.status(200).json({
-    //   status: "success",
-    //   clientSecret: session.client_secret,
-    //   reservation: newReservation,
-    // });
   } catch (error) {
     return next(new AppError(error.message, 500));
   }
@@ -138,13 +114,9 @@ exports.createReservation = async (req, res, next) => {
       userId,
       price,
     });
+    res.status(302).setHeader("Location", "http://localhost:5173/").end();
 
-    res.status(201).json({
-      status: "success",
-      data: {
-        reservation: newReservation,
-      },
-    });
+    res.end();
   } catch (error) {
     return next(new AppError(error.message, 500));
   }
