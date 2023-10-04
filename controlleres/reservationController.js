@@ -209,3 +209,18 @@ exports.getReservationsByHouseId = async (req, res, next) => {
 //     return next(new AppError(error.message, 500));
 //   }
 // };
+
+exports.getMyReservations = async (req, res, next) => {
+  try {
+    const reservations = await Reservation.find({ userId: req.user._id });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        reservations,
+      },
+    });
+  } catch (error) {
+    return next(new AppError(error.message, 500));
+  }
+};

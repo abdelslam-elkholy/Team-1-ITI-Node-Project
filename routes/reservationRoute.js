@@ -30,4 +30,10 @@ router
   .route("/house/:id")
   .get(...protectAdminRoutes, reservationController.getReservationsByHouseId);
 
+router.get(
+  "/me",
+  authController.protect,
+  reservationController.getMyReservations
+);
+
 module.exports = router;
