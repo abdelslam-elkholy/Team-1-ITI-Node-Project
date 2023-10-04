@@ -4,7 +4,7 @@ const houseSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      minLength: [5, "title is less than 3 characters"],
+      minLength: [3, "title is less than 3 characters"],
       maxLength: [80, "title is more than 80 characters"],
       required: true,
       trim: true,

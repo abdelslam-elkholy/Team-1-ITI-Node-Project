@@ -53,9 +53,8 @@ rivewsSchema.pre("save", async function (next) {
 });
 
 rivewsSchema.pre(/^find/, function (next) {
-
   this.populate({
-    path: "userId houseId",
+    path: "houseId",
     select: "-__v",
   });
   next();
