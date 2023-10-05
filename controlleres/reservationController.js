@@ -107,14 +107,17 @@ exports.getAllReservations = async (req, res, next) => {
 exports.createReservation = async (req, res, next) => {
   const { id, checkIn, checkOut, price, userId } = req.query;
   try {
-    const newReservation = await Reservation.create({
+    await Reservation.create({
       houseId: id,
       checkIn,
       checkOut,
       userId,
       price,
     });
-    res.status(302).setHeader("Location", "http://localhost:5173/").end();
+    res
+      .status(302)
+      .setHeader("Location", "http://localhost:5173/success")
+      .end();
 
     res.end();
   } catch (error) {
