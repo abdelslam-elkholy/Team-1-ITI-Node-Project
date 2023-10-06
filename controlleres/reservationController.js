@@ -76,7 +76,7 @@ exports.payment = async (req, res, next) => {
       )}/reservations/success?id=${id}&checkIn=${checkIn}&checkOut=${checkOut}&price=${price}&userId=${
         req.user._id
       } `,
-      cancel_url: "http://localhost:5173/",
+      cancel_url: "http://localhost:5173/failed",
     });
 
     res.status(200).json({
