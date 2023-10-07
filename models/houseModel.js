@@ -59,9 +59,18 @@ const houseSchema = new mongoose.Schema(
     },
     region: {
       type: String,
-      enum: [],
-      default: "Cairo",
+      enum: ["Europe", "Italy", "United States", "Turkey", "Africa"],
+      default: "Africa",
     },
+    lat: {
+      type: Number,
+      required: true,
+    },
+    lng: {
+      type: Number,
+      required: true,
+    },
+
     unavailableDates: { type: [Date] },
   },
 
