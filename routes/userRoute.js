@@ -12,19 +12,17 @@ router.get("/getMe", userController.getMe);
 router.patch("/updateMe", userController.updateMe);
 router.delete("/deleteMe", userController.deleteMe);
 
+router.use(authController.restrictTo("admin"));
+
 router.get("/", userController.getAllUsers);
 router.get("/deactivated", userController.getDeactivatedUsers);
 router.get("/hosts", userController.getHosts);
 
-router.delete("/:id", userController.deleteUser);
-router.get("/activate/:id", userController.activateUser);
 router.delete("/deactivate/:id", userController.deactivateUser);
-router.get("/makeHost/:id", userController.makeHost);
+router.delete("/:id", userController.deleteUser);
 router.delete("/deleteHost/:id", userController.deleteHost);
-
-router.get("/getMe", userController.getMe);
-router.patch("/updateMe", userController.updateMe);
-router.delete("/deleteMe", userController.deleteMe);
+router.get("/activate/:id", userController.activateUser);
+router.get("/makeHost/:id", userController.makeHost);
 
 // router.route("/signout").get(authController.signOut);
 // router.route("/resetPassword/:token").patch(authController.resetPassword);

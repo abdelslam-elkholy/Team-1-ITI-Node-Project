@@ -3,37 +3,18 @@ const router = express.Router();
 const reservationController = require("./../controlleres/reservationController");
 const authController = require("./../controlleres/authController");
 
-const protectAdminRoutes = [
-  authController.protect,
-  authController.restrictTo("admin"),
-];
-
-router
-  .route("/")
-  .get(...protectAdminRoutes, reservationController.getAllReservations)
-  .post(authController.protect, reservationController.payment);
-
 router.get("/success", reservationController.createReservation);
-router
-  .route("/:id")
-  .delete(authController.protect, reservationController.deleteReservation);
 
-router
-  .route("/user/:id")
-  .get(
-    authController.protect,
-    authController.accessControl,
-    reservationController.getReservationsByUserId
-  );
+router.use(authController.protect);
 
-router
-  .route("/house/:id")
-  .get(...protectAdminRoutes, reservationController.getReservationsByHouseId);
+router.route("/:id").delete(reservationController.deleteReservation);
+router.get("/me", reservationController.getMyReservations);
+router.post("/", reservationController.payment);
 
-router.get(
-  "/me",
-  authController.protect,
-  reservationController.getMyReservations
-);
+router.use(authController.restrictTo("admin"));
+
+router.route("/user/:id").get(reservationController.getReservationsByUserId);
+router.get("/house/:id", reservationController.getReservationsByHouseId);
+router.get("/", reservationController.getAllReservations);
 
 module.exports = router;
