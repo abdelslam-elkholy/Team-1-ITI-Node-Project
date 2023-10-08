@@ -3,42 +3,28 @@ const router = express.Router();
 const authController = require("./../controlleres/authController");
 const userController = require("./../controlleres/userController");
 
-const protectAdminRoutes = [
-  authController.protect,
-  authController.restrictTo("admin"),
-];
+router.post("/signup", authController.signUp);
+router.post("/signin", authController.signIn);
 
-router.route("/signup").post(authController.signUp);
-router.route("/signin").post(authController.signIn);
+router.use(authController.protect);
 
-router.route("/").get(...protectAdminRoutes, userController.getAllUsers);
-router
-  .route("/deactivated")
-  .get(...protectAdminRoutes, userController.getDeactivatedUsers);
-router.route("/hosts").get(...protectAdminRoutes, userController.getHosts);
+router.get("/getMe", userController.getMe);
+router.patch("/updateMe", userController.updateMe);
+router.delete("/deleteMe", userController.deleteMe);
 
-router.route("/:id").delete(...protectAdminRoutes, userController.deleteUser);
-router
-  .route("/activate/:id")
-  .get(...protectAdminRoutes, userController.activateUser);
-router
-  .route("/deactivate/:id")
-  .delete(...protectAdminRoutes, userController.deactivateUser);
-router
-  .route("/makeHost/:id")
-  .get(...protectAdminRoutes, userController.makeHost);
-router
-  .route("/deleteHost/:id")
-  .delete(...protectAdminRoutes, userController.deleteHost);
+router.get("/", userController.getAllUsers);
+router.get("/deactivated", userController.getDeactivatedUsers);
+router.get("/hosts", userController.getHosts);
 
-router
-  .route("/updateMe")
-  .patch(authController.protect, userController.updateMe);
-router
-  .route("/deleteMe")
-  .delete(authController.protect, userController.deleteMe);
+router.delete("/:id", userController.deleteUser);
+router.get("/activate/:id", userController.activateUser);
+router.delete("/deactivate/:id", userController.deactivateUser);
+router.get("/makeHost/:id", userController.makeHost);
+router.delete("/deleteHost/:id", userController.deleteHost);
 
-router.route("/getMe").get(authController.protect, userController.getMe);
+router.get("/getMe", userController.getMe);
+router.patch("/updateMe", userController.updateMe);
+router.delete("/deleteMe", userController.deleteMe);
 
 // router.route("/signout").get(authController.signOut);
 // router.route("/resetPassword/:token").patch(authController.resetPassword);

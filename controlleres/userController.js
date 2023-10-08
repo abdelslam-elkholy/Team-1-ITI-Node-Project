@@ -113,7 +113,12 @@ exports.activateUser = async (req, res, next) => {
 
 exports.deleteUser = async (req, res, next) => {
   try {
-    await User.findByIdAndDelete(req.params.id);
+    console.log(req.params.id);
+    const user = await User.findByIdAndDelete(req.params.id);
+
+    if (!user) {
+      return next(new AppError("No User Found", 400));
+    }
 
     res.status(204).json({
       status: "success",
